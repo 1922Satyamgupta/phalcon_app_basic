@@ -44,12 +44,13 @@ body {
 </style>
 </head>
 <body>
+  <p style="margin-left: 60px;"><?php  echo $time; ?></p>
 
 <div class="sidenav">
   <a href="/index/index" style="color: white;">Dashboard</a>
-  <a href="/users/index" style="color: white;">Users</a>
-  <a href="/blog/index" style="color: white;">Blogs</a>
-  <a href="#contact" style="color: white;">All</a>
+  <a href="/users/dashboard" style="color: white;">Users</a>
+  <a href="/blog/index" style="color: white;">Shop</a>
+  <a href="#contact" style="color: white;">Contact</a>echo $this->timestamp;
 </div>
 
 <div class="main">
@@ -84,7 +85,11 @@ if ($users->count() > 0) {
                 <td><?php echo $user->username; ?></td>
                 <td><?php echo $user->email; ?></td>
                 <td><?php echo $user->role; ?></td>
-                <td><?php echo $user->status; ?></td>
+                <?php if($user->status =='unapproved'){ ?>
+                <td><?php echo $this->tag->form("index/changestatus") ?><input type = "hidden"  name = 'approved' value="<?php echo $user->id ;?>"><input type="submit" name = "status" style="background-color:lightgreen;" value="approved"></form></td>
+                <?php } else {?>
+                  <td><?php echo $this->tag->form("index/changestatus") ?><input type = "hidden"  name = 'approved' value="<?php echo $user->id ;?>"><input type="submit" name = "status" style="background-color:red;" value="unapproved"></form></td>
+                  <?php } ?>
                 <td><?php echo $this->tag->linkTo(["edit/edit/$user->id", "edit"]);?></td>
                <td><?php echo $this->tag->linkTo(["index/delete/$user->id", "delete"]);?></td>
 

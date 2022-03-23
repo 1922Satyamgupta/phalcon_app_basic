@@ -9,7 +9,10 @@ class IndexController extends Controller
 {
     public function indexAction()
     {
+      $this->timestamp = $this->container->get('timestamp');
+      $this->view->time = $this->timestamp;
       $this->view->users = Users::find();
+      
     }
     public function editAction($userid) {
       
@@ -56,5 +59,22 @@ class IndexController extends Controller
     $this->response->redirect('/users/index');
 
 
+  }
+  public function changestatusAction() 
+  { 
+    $id = $this->request->getPost('approved');
+    $this->view->user = Users::findFirstById($id);
+    if($this->view->user->status == 'approved') {
+      $this->view->user->status = 'unapproved';
+    }
+    else {
+     $this->view->user->status = 'approved';
+ 
+    }
+    $this->view->user->save();
+ 
+     // $this->response->redirect('index');
+     header("Location: http://localhost:8080/");
+ 
   }
 }

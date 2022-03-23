@@ -10,6 +10,8 @@ use Phalcon\Mvc\Application;
 use Phalcon\Url;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Config;
+use Phalcon\Session\Manager;
+use Phalcon\Session\Adapter\Stream;
 $config = new Config([]);
 
 // Define some absolute path constants to aid in locating resources
@@ -62,20 +64,38 @@ $container->set(
                 'password' => 'secret',
                 'dbname'   => 'tutorial',
                 ]
-            );
+        );
+        }
+);
+$container->set(
+    'timestamp',
+    function () {
+        return  date("d/m/Y");
         }
 );
 
 // $container->set(
 //     'mongo',
-//     function () {
-//         $mongo = new MongoClient();
-
-//         return $mongo->selectDB('phalt');
+//     function ($this->session  = $this->container->getSession(); $mongo->selectDB('phalt');
 //     },
 //     true
 // );
+$container->set(
+    'session',
+    function () {
+        $session = new Manager();
+        $files = new Stream(
+            [
+                'savePath' => '/tmp',
+            ]
+        );
+        $session->setAdapter($files);
+        $session->start();
 
+        return $session;
+    },
+    true
+);
 try {
     // Handle the request
     $response = $application->handle(
